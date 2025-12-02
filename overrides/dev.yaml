@@ -1,0 +1,14 @@
+controller:
+  adminUser: "admin"
+  adminPassword: "devpassword"
+
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "256Mi"
+    limits:
+      cpu: "200m"
+      memory: "512Mi"
+
+  persistence:
+    size: 5Gi

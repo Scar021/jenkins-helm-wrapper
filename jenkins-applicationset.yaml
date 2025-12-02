@@ -1,0 +1,32 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: jenkins-multi-env
+  namespace: argocd
+spec:
+  generators:
+    - list:
+        elements:
+          - env: dev
+          - env: prod
+  template:
+    metadata:
+      name: jenkins-{{env}}
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/Scar021/jenkins-helm-wrapper.git
+        targetRevision: main
+        path: .              # Helm chart root is repo root
+        helm:
+          valueFiles:
+            - overrides/{{env}}.yaml
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: jenkins-{{env}}
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
